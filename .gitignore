@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.log
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# dotenv 환경 변수
+.env
+
+# MongoDB dump
+dump/
+
+# Uvicorn PID/Socket/Reload 파일
+*.pid
+*.sock
+
+# Byte-compiled files
+*.pyo
+
+# Test coverage
+htmlcov/
+.coverage
+coverage.xml
+.cache
+.pytest_cache/
+
+# Migrations (if using Alembic or similar)
+*.iml
+*.xml
