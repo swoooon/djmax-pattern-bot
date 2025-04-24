@@ -45,6 +45,6 @@ async def graph(ctx: SlashContext, nickname: str):
 
 @bot.listen()
 async def on_ready():
-    print("✅ 봇이 시작되었습니다")
+    print(f"✅ 봇 시작됨 - {len(bot.guilds)}개의 서버에 참여 중입니다.")
 
 bot.start()
