@@ -12,7 +12,7 @@ bot = Client(token=os.getenv("BOT_TOKEN"), intents=Intents.DEFAULT)
 
 
 @slash_command(
-    name="skillgraph",
+    name="graph",
     description="유저 닉네임의 태그별 실력 그래프를 생성합니다",
     options=[
         SlashCommandOption(
@@ -23,13 +23,15 @@ bot = Client(token=os.getenv("BOT_TOKEN"), intents=Intents.DEFAULT)
         )
     ]
 )
-async def skillgraph_command(ctx: SlashContext, nickname: str):
+async def graph(ctx: SlashContext, nickname: str):
     await ctx.defer()
     try:
+
         async with httpx.AsyncClient() as client:
-            res = await client.get(f"http://localhost:8000/varchive/{nickname}/tag-skill-image")
+            res = await client.get(f"{os.getenv('MY_API')}/varchive/{nickname}/tag-skill-image")
             res.raise_for_status()
             img_bytes = BytesIO(res.content)
+            print(nickname)
             await ctx.send(
                 content=f"🎵 `{nickname}`님의 태그별 실력 그래프입니다!",
                 files=File(file=img_bytes, file_name="skill.png")
@@ -39,19 +41,6 @@ async def skillgraph_command(ctx: SlashContext, nickname: str):
         print(e)
 
 
-
-@slash_command(
-    name="reload",
-    description="🔁 봇을 재시작합니다 (관리자 전용)"
-)
-async def reload_command(ctx: SlashContext):
-    if int(ctx.author.id) != int(os.getenv("OWNER_ID")):
-        await ctx.send("🚫 이 명령어를 실행할 권한이 없습니다.", ephemeral=True)
-        return
-
-    await ctx.send("♻️ 봇을 재시작합니다.")
-    await bot.stop()
-    os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
 @bot.listen()
