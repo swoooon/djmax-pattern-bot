@@ -1,4 +1,5 @@
 from interactions import Client, Intents, SlashContext, OptionType, slash_command, SlashCommandOption, File
+from interactions import SlashCommandChoice as Choice
 import httpx
 import os
 from io import BytesIO
@@ -17,23 +18,34 @@ bot = Client(token=os.getenv("BOT_TOKEN"), intents=Intents.DEFAULT)
     options=[
         SlashCommandOption(
             name="nickname",
-            description="조회할 유저 닉네임",
+            description="닉네임",
             type=OptionType.STRING,
             required=True
+        ),
+        SlashCommandOption(
+            name="button",
+            description="버튼",
+            type=OptionType.STRING,
+            required=True,
+            choices=[
+                Choice(name="4B", value="4B"),
+                Choice(name="6B", value="6B"),
+            ]
         )
     ]
 )
-async def graph(ctx: SlashContext, nickname: str):
+async def graph(ctx: SlashContext, nickname: str, button: str):
     await ctx.defer()
     try:
-
         async with httpx.AsyncClient() as client:
-            res = await client.get(f"{os.getenv('MY_API')}/varchive/{nickname}/tag-skill-image")
+            res = await client.get(
+                f"{os.getenv('MY_API')}/varchive/{nickname}/tag-skill-image?button={int(button[0])}"
+            )
             res.raise_for_status()
             img_bytes = BytesIO(res.content)
-            print(nickname)
+            print(nickname, button)
             await ctx.send(
-                content=f"🎵 `{nickname}`님의 태그별 실력 그래프입니다!",
+                content=f"🎵 `{nickname}`님의 {button} 태그별 실력 그래프입니다!",
                 files=File(file=img_bytes, file_name="skill.png")
             )
     except Exception as e:
