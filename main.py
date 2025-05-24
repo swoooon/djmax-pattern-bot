@@ -29,6 +29,7 @@ bot = Client(token=os.getenv("BOT_TOKEN"), intents=Intents.DEFAULT)
             required=True,
             choices=[
                 Choice(name="4B", value="4B"),
+                Choice(name="5B", value="5B"),
                 Choice(name="6B", value="6B"),
             ]
         )
