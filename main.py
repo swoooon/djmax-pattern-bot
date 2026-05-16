@@ -47,7 +47,7 @@ def api_headers():
 async def graph(ctx: SlashContext, nickname: str, button: str):
     await ctx.defer()
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(10.0, connect=5.0)) as client:
             res = await client.get(
                 f"{os.getenv('MY_API')}/varchive/{nickname}/tag-skill-image?button={int(button[0])}",
                 headers=api_headers(),
