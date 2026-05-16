@@ -10,6 +10,14 @@ import sys
 
 load_dotenv()
 bot = Client(token=os.getenv("BOT_TOKEN"), intents=Intents.DEFAULT)
+BOT_API_SECRET = os.getenv("BOT_API_SECRET")
+
+
+def api_headers():
+    headers = {}
+    if BOT_API_SECRET:
+        headers["X-Bot-Secret"] = BOT_API_SECRET
+    return headers
 
 
 @slash_command(
@@ -41,7 +49,9 @@ async def graph(ctx: SlashContext, nickname: str, button: str):
     try:
         async with httpx.AsyncClient() as client:
             res = await client.get(
-                f"{os.getenv('MY_API')}/varchive/{nickname}/tag-skill-image?button={int(button[0])}"
+                f"{os.getenv('MY_API')}/varchive/{nickname}/tag-skill-image?button={int(button[0])}",
+                headers=api_headers(),
+                timeout=30,
             )
             res.raise_for_status()
             img_bytes = BytesIO(res.content)
